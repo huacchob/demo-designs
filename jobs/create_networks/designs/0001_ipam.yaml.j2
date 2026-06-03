@@ -1,0 +1,29 @@
+---
+namespaces:
+    - "!get:namespace": "{{ namespace_name }}"
+
+prefixes:
+    # Supernet: holds the eight /24s, no hosts assigned directly.
+    - "!create:prefix": "{{ prefix }}"
+      type: "container"
+      status__name: "Active"
+      description: "Supernet container for site {{ prefix }}"
+
+    # The eight /24 networks within the /21. The management /24 is a
+    # container (it holds the /26); the rest are usable networks.
+    {% for child in child_prefixes %}
+    - "!create:prefix": "{{ child }}"
+      {% if child == management_network %}
+      type: "container"
+      description: "Management container for {{ child }}"
+      {% else %}
+      type: "network"
+      {% endif %}
+      status__name: "Active"
+    {% endfor %}
+
+    # Management /26 carved from the management /24.
+    - "!create:prefix": "{{ management_prefix }}"
+      type: "network"
+      status__name: "Active"
+      description: "Management network"
