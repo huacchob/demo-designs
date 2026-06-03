@@ -1,12 +1,14 @@
 ---
 namespaces:
     - "!get:name": "{{ namespace_name }}"
+      "!ref": "space"
 
 prefixes:
     # Supernet: holds the eight /24s, no hosts assigned directly.
     - "!create:prefix": "{{ prefix }}"
       type: "container"
       status__name: "Active"
+      namespace: "!ref:space"
       description: "Supernet container for site {{ prefix }}"
 
     # The eight /24 networks within the /21. The management /24 is a
@@ -20,10 +22,12 @@ prefixes:
       type: "network"
       {% endif %}
       status__name: "Active"
+      namespace: "!ref:space"
     {% endfor %}
 
     # Management /26 carved from the management /24.
     - "!create:prefix": "{{ management_prefix }}"
       type: "network"
       status__name: "Active"
+      namespace: "!ref:space"
       description: "Management network"
