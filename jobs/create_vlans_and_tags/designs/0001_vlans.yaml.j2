@@ -1,0 +1,14 @@
+---
+
+tags:
+    - "!create_or_update:name": "dhcp"
+      "content_types":
+        - "!get:app_label": "ipam"
+          "!get:model": "vlan"
+
+vlans:
+    - "!create_or_update:vid": 30
+      name: "test"
+      status__name: "Active"
+      tags:
+        - "!get:name": "dhcp"
